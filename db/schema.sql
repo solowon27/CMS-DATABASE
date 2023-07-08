@@ -1,42 +1,39 @@
-DROP DATABASE IF EXISTS CMS.DB;
-CREATE DATABASE CMS.DB;
+DROP DATABASE IF EXISTS CMS_DB;
+CREATE DATABASE CMS_DB;
 
-USE CMS.DB;
-
-CREATE TABLE EMPLOYEES (
-    id INT NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    department VARCHAR(100) NOT NULL,
-    salary DECIMAL(10,2) NOT NULL,
-    manager VARCHAR(100) NOT NULL,
-    role_id INT NOT NULL,
-    manager_id INT NOT NULL,
-    PRIMARY KEY (id)
-);
+USE CMS_DB;
 
 CREATE TABLE DEPARTMENTS (
-    id INT NOT NULL AUTO_INCREMENT,
+    dep_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (dep_id)
+);
+
+CREATE TABLE EMPLOYEES (
+    emp_id INT NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    manager_id INT,
+    role_id INT NOT NULL,
+    PRIMARY KEY (emp_id),
+    FOREIGN KEY (manager_id) REFERENCES MANAGERS(mgr_id),
+    FOREIGN KEY (role_id) REFERENCES ROLES(role_id),
 );
 
 CREATE TABLE ROLES (
-    id INT NOT NULL AUTO_INCREMENT,
+    role_id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,
     salary DECIMAL(10,2) NOT NULL,
     department_id INT NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (role_id),
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
 );
 
 CREATE TABLE MANAGERS (
-    id INT NOT NULL AUTO_INCREMENT,
+    mgr_id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    department VARCHAR(100) NOT NULL,
-    role_id INT NOT NULL,
     department_id INT NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (mgr_id),
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
 );
