@@ -1,10 +1,50 @@
 const inquirer = require('inquirer')
-const mySql = require('mysql')
+//const mySql = require('mysql')
 
-const connection = mySql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: '',
-    database: 'cms_db'
-});
+var questions = [
+    {
+        type: 'list',
+        name: 'action',
+        message: 'What would you like to do?',
+        choices: [ 'view all Employees',
+                    'Add Employee',
+                    'update Employee Role',
+                    'view All Role?',
+                    'Add Role',
+                    'view all Departments',
+                    'Add Department',  
+    ]
+    },
+
+];
+
+inquirer.prompt(questions).then(answers => {
+    console.log(answers)
+    switch (answers.action) {
+        case 'view all Employees':
+            viewAllEmployees()
+            break;
+        case 'Add Employee':
+            addEmployee()
+            break;
+        case 'update Employee Role':
+            updateEmployeeRole()
+            break;
+        case 'view All Role?':
+            viewAllRole()
+            break;
+        case 'Add Role':
+            addRole()
+            break;
+        case 'view all Departments':
+            viewAllDepartments()
+            break;
+        case 'Add Department':
+            addDepartment()
+            break;
+        default:
+            break;
+    }
+}
+);
+
