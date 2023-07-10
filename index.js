@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 const connection = require('./server');
 
 function viewAllEmployees() {
-  connection.query('SELECT * FROM employee', function (err, res) {
+  connection.query('SELECT * FROM EMPLOYEES', function (err, res) {
     if (err) throw err;
     console.log(res);
     promptUser();
@@ -29,13 +29,13 @@ function addEmployee() {
       },
       {
         type: 'input',
-        name: 'manager_id',
-        message: "Enter the employee's manager ID:"
+        name: 'dep_id',
+        message: "Enter the employee's department id:"
       }
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
+        'INSERT INTO EMPLOYEES (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
         [answers.first_name, answers.last_name, answers.role_id, answers.manager_id],
         function (err, res) {
           if (err) throw err;
@@ -74,7 +74,7 @@ function updateEmployeeRole() {
 }
 
 function viewAllRole() {
-  connection.query('SELECT * FROM role', function (err, res) {
+  connection.query('SELECT * FROM ROLES', function (err, res) {
     if (err) throw err;
     console.log(res);
     promptUser();
@@ -102,7 +102,7 @@ function addRole() {
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)',
+        'INSERT INTO ROLES (title, salary, dep_id) VALUES (?, ?, ?)',
         [answers.title, answers.salary, answers.department_id],
         function (err, res) {
           if (err) throw err;
@@ -114,7 +114,7 @@ function addRole() {
 }
 
 function viewAllDepartments() {
-  connection.query('SELECT * FROM department', function (err, res) {
+  connection.query('SELECT * FROM DEPARTMENTS', function (err, res) {
     if (err) throw err;
     console.log(res);
     promptUser();
@@ -132,7 +132,7 @@ function addDepartment() {
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO department (name) VALUES (?)',
+        'INSERT INTO DEPARTMENTS (name) VALUES (?)',
         [answers.name],
         function (err, res) {
           if (err) throw err;
@@ -140,6 +140,32 @@ function addDepartment() {
           promptUser();
         }
       );
+    });
+}
+
+function updateEmployeesManager() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'employee_id',
+        message: "Enter the employee's ID:"
+      },
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: "Enter the new manager ID for the employee:"
+      }
+    ])
+    .then(answers => {
+      const { employee_id, manager_id } = answers;
+      const query = 'UPDATE EEMPLOYEES SET manager_id = ? WHERE id = ?';
+
+      connection.query(query, [manager_id, employee_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        promptUser();
+      });
     });
 }
 
@@ -158,6 +184,13 @@ function promptUser() {
           'Add Role',
           'View all Departments',
           'Add Department',
+          '***more options ~',
+          'update employees manager',
+          'view employees by managers',
+          'view employees by department',
+          'delete department',
+          'delete roles',
+          'delete manager',
           'Exit'
         ]
       }
@@ -171,20 +204,37 @@ function promptUser() {
         case 'Add Employee':
           addEmployee();
           break;
-        case 'Update Employee Role':
-          updateEmployeeRole();
-          break;
         case 'View All Roles':
           viewAllRole();
           break;
-        case 'Add Role':
-          addRole();
+        case 'Update Employee Role':
+          updateEmployeeRole();
           break;
         case 'View all Departments':
           viewAllDepartments();
           break;
         case 'Add Department':
           addDepartment();
+          break;
+
+        //extra options
+        case 'update employees manager':
+          updateEmployeesManager();
+          break;
+        case 'view employees by managers':
+          viewEmployeesByManager();
+          break;
+        case 'view employees by departments':
+          viewEmployeesByDepartments();
+          break;
+        case 'delete departments':
+          deleteDepartments();
+          break;
+        case 'delete roles':
+          deleteRoles();
+          break;
+        case 'delete managers':
+          deleteManagers();
           break;
         case 'Exit':
           connection.end();
