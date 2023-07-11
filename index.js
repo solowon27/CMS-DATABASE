@@ -159,8 +159,7 @@ function updateEmployeesManager() {
     ])
     .then(answers => {
       const { employee_id, manager_id } = answers;
-      const query = 'UPDATE EEMPLOYEES SET manager_id = ? WHERE id = ?';
-
+      const query = 'UPDATE EMPLOYEES SET manager_id = ? WHERE emp_id = ?';
       connection.query(query, [manager_id, employee_id], (err, res) => {
         if (err) throw err;
         console.log(res);
@@ -168,6 +167,47 @@ function updateEmployeesManager() {
       });
     });
 }
+
+function viewEmployeesByManager() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: "Enter the manager's ID:"
+      }
+    ])
+    .then(answers => {
+      const { manager_id } = answers;
+      const query = 'SELECT * FROM EMPLOYEES WHERE manager_id = ?';
+      connection.query(query, [manager_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        promptUser();
+      });
+    });
+}
+
+function viewEmployeesByDepartments() {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'dep_id',
+        message: "Enter the department's ID:"
+      }
+    ])
+    .then(answers => {
+      const { dep_id } = answers;
+      const query = 'SELECT * FROM EMPLOYEES WHERE dep_id = ?';
+      connection.query(query, [dep_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        promptUser();
+      });
+    });
+}
+
 
 function promptUser() {
   inquirer
@@ -177,21 +217,23 @@ function promptUser() {
         name: 'action',
         message: 'What would you like to do?',
         choices: [
+          '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
           'View all Employees',
           'Add Employee',
           'Update Employee Role',
           'View All Roles',
           'Add Role',
           'View all Departments',
-          'Add Department',
-          '***more options ~',
+          'Add Department \n',
+          '***more options*** \n',
           'update employees manager',
           'view employees by managers',
           'view employees by department',
           'delete department',
           'delete roles',
           'delete manager',
-          'Exit'
+          'Exit',
+          '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
         ]
       }
     ])
