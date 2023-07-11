@@ -9,17 +9,6 @@ CREATE TABLE DEPARTMENTS (
     PRIMARY KEY (dep_id)
 );
 
-CREATE TABLE EMPLOYEES (
-    emp_id INT NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    manager_id INT,
-    role_id INT NOT NULL,
-    PRIMARY KEY (emp_id),
-    FOREIGN KEY (manager_id) REFERENCES MANAGERS(mgr_id),
-    FOREIGN KEY (role_id) REFERENCES ROLES(role_id),
-);
-
 CREATE TABLE ROLES (
     role_id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,
@@ -29,11 +18,22 @@ CREATE TABLE ROLES (
     FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
 );
 
-CREATE TABLE MANAGERS (
-    mgr_id INT NOT NULL AUTO_INCREMENT,
+-- CREATE TABLE MANAGERS (
+--     mgr_id INT NOT NULL AUTO_INCREMENT,
+--     first_name VARCHAR(100) NOT NULL,
+--     last_name VARCHAR(100) NOT NULL,
+--     department_id INT NOT NULL,
+--     PRIMARY KEY (mgr_id),
+--     FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
+-- );
+
+CREATE TABLE EMPLOYEES (
+    emp_id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    department_id INT NOT NULL,
-    PRIMARY KEY (mgr_id),
-    FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
+    manager_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (emp_id),
+    -- FOREIGN KEY (manager_id) REFERENCES MANAGERS(mgr_id),
+    FOREIGN KEY (role_id) REFERENCES ROLES(role_id)
 );
