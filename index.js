@@ -1,15 +1,15 @@
 const inquirer = require('inquirer');
 const connection = require('./server');
 
-function viewAllEmployees() {
+function viewAllEmployees(connection) {
   connection.query('SELECT * FROM EMPLOYEES', function (err, res) {
     if (err) throw err;
     console.log(res);
-    promptUser();
+    promptUser(connection); 
   });
 }
 
-function addEmployee() {
+function addEmployee(connection) {
   inquirer
     .prompt([
       {
@@ -36,17 +36,17 @@ function addEmployee() {
     .then(answers => {
       connection.query(
         'INSERT INTO EMPLOYEES (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
-        [answers.first_name, answers.last_name, answers.role_id, answers.manager_id],
+        [answers.first_name, answers.last_name, answers.role_id, answers.manager_id || null],
         function (err, res) {
           if (err) throw err;
           console.log(res);
-          promptUser();
+          promptUser(connection);
         }
       );
     });
 }
 
-function updateEmployeeRole() {
+function updateEmployeeRole(connection) {
   inquirer
     .prompt([
       {
@@ -62,26 +62,26 @@ function updateEmployeeRole() {
     ])
     .then(answers => {
       connection.query(
-        'UPDATE employee SET role_id = ? WHERE id = ?',
+        'UPDATE EMPLOYEES SET role_id = ? WHERE emp_id = ?',
         [answers.role_id, answers.employee_id],
         function (err, res) {
           if (err) throw err;
           console.log(res);
-          promptUser();
+          promptUser(connection);
         }
       );
     });
 }
 
-function viewAllRole() {
+function viewAllRole(connection) {
   connection.query('SELECT * FROM ROLES', function (err, res) {
     if (err) throw err;
     console.log(res);
-    promptUser();
+    promptUser(connection);
   });
 }
 
-function addRole() {
+function addRole(connection) {
   inquirer
     .prompt([
       {
@@ -107,21 +107,21 @@ function addRole() {
         function (err, res) {
           if (err) throw err;
           console.log(res);
-          promptUser();
+          promptUser(connection);
         }
       );
     });
 }
 
-function viewAllDepartments() {
+function viewAllDepartments(connection) {
   connection.query('SELECT * FROM DEPARTMENTS', function (err, res) {
     if (err) throw err;
     console.log(res);
-    promptUser();
+    promptUser(connection);
   });
 }
 
-function addDepartment() {
+function addDepartment(connection) {
   inquirer
     .prompt([
       {
@@ -137,13 +137,13 @@ function addDepartment() {
         function (err, res) {
           if (err) throw err;
           console.log(res);
-          promptUser();
+          promptUser(connection);
         }
       );
     });
 }
 
-function updateEmployeesManager() {
+function updateEmployeesManager(connection) {
   inquirer
     .prompt([
       {
@@ -163,12 +163,12 @@ function updateEmployeesManager() {
       connection.query(query, [manager_id, employee_id], (err, res) => {
         if (err) throw err;
         console.log(res);
-        promptUser();
+        promptUser(connection);
       });
     });
 }
 
-function viewEmployeesByManager() {
+function viewEmployeesByManager(connection) {
   inquirer
     .prompt([
       {
@@ -183,12 +183,12 @@ function viewEmployeesByManager() {
       connection.query(query, [manager_id], (err, res) => {
         if (err) throw err;
         console.log(res);
-        promptUser();
+        promptUser(connection);
       });
     });
 }
 
-function viewEmployeesByDepartments() {
+function viewEmployeesByDepartments(connection) {
   inquirer
     .prompt([
       {
@@ -203,13 +203,72 @@ function viewEmployeesByDepartments() {
       connection.query(query, [dep_id], (err, res) => {
         if (err) throw err;
         console.log(res);
+        promptUser(connection);
+      });
+    });
+}
+
+function deleteDepartment(connection) {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'dep_id',
+        message: "Enter the department's ID you want to delete:"
+      }
+    ])
+    .then(answers => {
+      const { dep_id } = answers;
+      const query = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?';
+      connection.query(query, [dep_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
         promptUser();
       });
     });
 }
 
+function deleteRole(connection) {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'role_id',
+        message: "Enter the role's ID you want to delete:"
+      }
+    ])
+    .then(answers => {
+      const { role_id } = answers;
+      const query = 'DELETE FROM ROLES WHERE role_id = ?';
+      connection.query(query, [role_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        promptUser(connection);
+      });
+    });
+}
 
-function promptUser() {
+function deleteManager(connection) {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: "Enter the manager's ID you want to delete:"
+      }
+    ])
+    .then(answers => {
+      const { manager_id } = answers;
+      const query = 'DELETE FROM MANAGERS WHERE manager_id = ?';
+      connection.query(query, [manager_id], (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        promptUser(connection);
+      });
+    });
+}
+
+function promptUser(connection) {
   inquirer
     .prompt([
       {
@@ -224,8 +283,10 @@ function promptUser() {
           'View All Roles',
           'Add Role',
           'View all Departments',
-          'Add Department \n',
-          '***more options*** \n',
+          'Add Department',
+          '~~~~~~~~~~~~~~~~~~~~~~',
+          '***more options***',
+          '~~~~~~~~~~~~~~~~~~~~~~',
           'update employees manager',
           'view employees by managers',
           'view employees by department',
@@ -238,45 +299,48 @@ function promptUser() {
       }
     ])
     .then(answers => {
-      console.log(answers);
+      // console.log(answers);
       switch (answers.action) {
         case 'View all Employees':
-          viewAllEmployees();
+          viewAllEmployees(connection);
           break;
         case 'Add Employee':
-          addEmployee();
+          addEmployee(connection);
           break;
         case 'View All Roles':
-          viewAllRole();
+          viewAllRole(connection);
           break;
         case 'Update Employee Role':
-          updateEmployeeRole();
+          updateEmployeeRole(connection);
+          break;
+        case 'Add Role':
+          addRole(connection);
           break;
         case 'View all Departments':
-          viewAllDepartments();
+          viewAllDepartments(connection);
           break;
         case 'Add Department':
-          addDepartment();
+          addDepartment(connection);
           break;
 
         //extra options
         case 'update employees manager':
-          updateEmployeesManager();
+          updateEmployeesManager(connection);
           break;
         case 'view employees by managers':
-          viewEmployeesByManager();
+          viewEmployeesByManager(connection);
           break;
         case 'view employees by departments':
-          viewEmployeesByDepartments();
+          viewEmployeesByDepartments(connection);
           break;
         case 'delete departments':
-          deleteDepartments();
+          deleteDepartment(connection);
           break;
         case 'delete roles':
-          deleteRoles();
+          deleteRole(connection);
           break;
         case 'delete managers':
-          deleteManagers();
+          deleteManager(connection);
           break;
         case 'Exit':
           connection.end();
@@ -288,4 +352,7 @@ function promptUser() {
     });
 }
 
-promptUser();
+// promptUser();
+module.exports = {
+  promptUser
+};
