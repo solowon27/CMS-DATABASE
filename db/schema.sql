@@ -5,7 +5,7 @@ USE CMS_DB;
 
 CREATE TABLE DEPARTMENTS (
     dep_id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+    dep_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (dep_id)
 );
 
@@ -33,7 +33,9 @@ CREATE TABLE EMPLOYEES (
     last_name VARCHAR(100) NOT NULL,
     manager_id INT,
     role_id INT NOT NULL,
+    department_id INT NOT NULL,
     PRIMARY KEY (emp_id),
     -- FOREIGN KEY (manager_id) REFERENCES MANAGERS(mgr_id),
-    FOREIGN KEY (role_id) REFERENCES ROLES(role_id)
+    FOREIGN KEY (role_id) REFERENCES ROLES(role_id),
+    FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
 );
