@@ -103,7 +103,7 @@ function addRole(connection) {
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO ROLES (title, salary, dep_id) VALUES (?, ?, ?)',
+        'INSERT INTO ROLES (title, salary, department_id) VALUES (?, ?, ?)',
         [answers.title, answers.salary, answers.department_id],
         function (err, res) {
           if (err) throw err;
@@ -189,7 +189,7 @@ function viewEmployeesByManager(connection) {
     });
 }
 
-function viewEmployeesByDepartments(connection) {
+function viewEmployeesByDep(connection) {
   inquirer
     .prompt([
       {
@@ -200,7 +200,7 @@ function viewEmployeesByDepartments(connection) {
     ])
     .then(answers => {
       const { dep_id } = answers;
-      const query = 'SELECT * FROM EMPLOYEES WHERE dep_id = ?';
+      const query = 'SELECT * FROM EMPLOYEES WHERE department_id = ?';
       connection.query(query, [dep_id], (err, res) => {
         if (err) throw err;
         console.table(res);
@@ -208,6 +208,7 @@ function viewEmployeesByDepartments(connection) {
       });
     });
 }
+
 
 function deleteDepartment(connection) {
   inquirer
@@ -277,7 +278,7 @@ function promptUser(connection) {
         name: 'action',
         message: 'What would you like to do?',
         choices: [
-          '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~',
+          '\x1b[32m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \x1b[0m',
           'View all Employees',
           'Add Employee',
           'Update Employee Role',
@@ -285,22 +286,19 @@ function promptUser(connection) {
           'Add Role',
           'View all Departments',
           'Add Department',
-          '~~~~~~~~~~~~~~~~~~~~~~',
-          '***more options***',
-          '~~~~~~~~~~~~~~~~~~~~~~',
+          '\x1b[32m ***more options*** \x1b[0m',
           'update employees manager',
           'view employees by managers',
-          'view employees by department',
+          'view employees by departments',
           'delete department',
           'delete roles',
           'delete manager',
           'Exit',
-          '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+          '\x1b[32m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \x1b[0m'
         ]
       }
     ])
     .then(answers => {
-      // console.log(answers);
       switch (answers.action) {
         case 'View all Employees':
           viewAllEmployees(connection);
@@ -332,7 +330,7 @@ function promptUser(connection) {
           viewEmployeesByManager(connection);
           break;
         case 'view employees by departments':
-          viewEmployeesByDepartments(connection);
+          viewEmployeesByDep(connection);
           break;
         case 'delete departments':
           deleteDepartment(connection);
