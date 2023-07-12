@@ -30,14 +30,19 @@ function addEmployee(connection) {
       },
       {
         type: 'input',
-        name: 'dep_id',
+        name: 'department_id',
         message: "Enter the employee's department id:"
+      },
+      {
+        type: 'input',
+        name: 'manager_id',
+        message: "Enter the employee's manager ID:"
       }
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO EMPLOYEES (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
-        [answers.first_name, answers.last_name, answers.role_id, answers.manager_id || null],
+        'INSERT INTO EMPLOYEES (first_name, last_name, role_id, department_id, manager_id) VALUES (?, ?, ?, ?, ?)',
+        [answers.first_name, answers.last_name, answers.role_id, answers.department_id, answers.manager_id || null],
         function (err, res) {
           if (err) throw err;
           console.table(res);
@@ -209,7 +214,6 @@ function viewEmployeesByDep(connection) {
     });
 }
 
-
 function deleteDepartment(connection) {
   inquirer
     .prompt([
@@ -221,14 +225,30 @@ function deleteDepartment(connection) {
     ])
     .then(answers => {
       const { dep_id } = answers;
-      const query = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?';
-      connection.query(query, [dep_id], (err, res) => {
+      const firstDeletion = 'DELETE FROM EMPLOYEES WHERE role_id IN (SELECT role_id FROM ROLES WHERE department_id = ?)';
+      connection.query(firstDeletion, [dep_id], (err, res) => {
         if (err) throw err;
-        console.table(res);
-        promptUser();
+
+        const secondDeletion = 'DELETE FROM ROLES WHERE department_id = ?';
+        connection.query(secondDeletion, [dep_id], (err, res) => {
+          if (err) throw err;
+
+          const thirdDeletion = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?';
+          connection.query(thirdDeletion, [dep_id], (err, res) => {
+            if (err) throw err;
+
+            console.table(res);
+            promptUser(connection);
+          });
+        });
       });
     });
 }
+
+
+
+
+
 
 function deleteRole(connection) {
   inquirer
@@ -332,7 +352,7 @@ function promptUser(connection) {
         case 'view employees by departments':
           viewEmployeesByDep(connection);
           break;
-        case 'delete departments':
+        case 'delete department':
           deleteDepartment(connection);
           break;
         case 'delete roles':
