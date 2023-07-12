@@ -31,7 +31,7 @@ CREATE TABLE EMPLOYEES (
     emp_id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    manager_id INT NOT NULL,
+    manager_id INT,
     role_id INT NOT NULL,
     PRIMARY KEY (emp_id),
     -- FOREIGN KEY (manager_id) REFERENCES MANAGERS(mgr_id),
