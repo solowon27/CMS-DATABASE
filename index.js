@@ -1,11 +1,12 @@
 const inquirer = require('inquirer');
 const connection = require('./server');
+const cTable = require('console.table');
 
 function viewAllEmployees(connection) {
   connection.query('SELECT * FROM EMPLOYEES', function (err, res) {
     if (err) throw err;
-    console.log(res);
-    promptUser(connection); 
+    console.table(res);
+    promptUser(connection);
   });
 }
 
@@ -39,7 +40,7 @@ function addEmployee(connection) {
         [answers.first_name, answers.last_name, answers.role_id, answers.manager_id || null],
         function (err, res) {
           if (err) throw err;
-          console.log(res);
+          console.table(res);
           promptUser(connection);
         }
       );
@@ -66,7 +67,7 @@ function updateEmployeeRole(connection) {
         [answers.role_id, answers.employee_id],
         function (err, res) {
           if (err) throw err;
-          console.log(res);
+          console.table(res);
           promptUser(connection);
         }
       );
@@ -76,7 +77,7 @@ function updateEmployeeRole(connection) {
 function viewAllRole(connection) {
   connection.query('SELECT * FROM ROLES', function (err, res) {
     if (err) throw err;
-    console.log(res);
+    console.table(res);
     promptUser(connection);
   });
 }
@@ -106,7 +107,7 @@ function addRole(connection) {
         [answers.title, answers.salary, answers.department_id],
         function (err, res) {
           if (err) throw err;
-          console.log(res);
+          console.table(res);
           promptUser(connection);
         }
       );
@@ -116,7 +117,7 @@ function addRole(connection) {
 function viewAllDepartments(connection) {
   connection.query('SELECT * FROM DEPARTMENTS', function (err, res) {
     if (err) throw err;
-    console.log(res);
+    console.table(res);
     promptUser(connection);
   });
 }
@@ -136,7 +137,7 @@ function addDepartment(connection) {
         [answers.name],
         function (err, res) {
           if (err) throw err;
-          console.log(res);
+          console.table(res);
           promptUser(connection);
         }
       );
@@ -162,7 +163,7 @@ function updateEmployeesManager(connection) {
       const query = 'UPDATE EMPLOYEES SET manager_id = ? WHERE emp_id = ?';
       connection.query(query, [manager_id, employee_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser(connection);
       });
     });
@@ -182,7 +183,7 @@ function viewEmployeesByManager(connection) {
       const query = 'SELECT * FROM EMPLOYEES WHERE manager_id = ?';
       connection.query(query, [manager_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser(connection);
       });
     });
@@ -202,7 +203,7 @@ function viewEmployeesByDepartments(connection) {
       const query = 'SELECT * FROM EMPLOYEES WHERE dep_id = ?';
       connection.query(query, [dep_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser(connection);
       });
     });
@@ -222,7 +223,7 @@ function deleteDepartment(connection) {
       const query = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?';
       connection.query(query, [dep_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser();
       });
     });
@@ -242,7 +243,7 @@ function deleteRole(connection) {
       const query = 'DELETE FROM ROLES WHERE role_id = ?';
       connection.query(query, [role_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser(connection);
       });
     });
@@ -262,7 +263,7 @@ function deleteManager(connection) {
       const query = 'DELETE FROM MANAGERS WHERE manager_id = ?';
       connection.query(query, [manager_id], (err, res) => {
         if (err) throw err;
-        console.log(res);
+        console.table(res);
         promptUser(connection);
       });
     });
