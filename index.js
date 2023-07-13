@@ -1,6 +1,13 @@
-//this is our index file where the user prompts functions are loaded
-///it is a long line page code so i put some comments on basic lines so to save time u can check the comments
 
+//this is our index file where we use select, insert, update, delete nd sum methods to manage our employment system
+
+//select used for to view the entire selected table
+//insert methodd is used for to add a row in a table
+//the delete method reversly to remove a row from a table
+//update is for change the value of the row
+//and sum method is used for to get the sum of selected column in a table
+
+//so just follow the comments to get more information and understanding for the app
 
 const inquirer = require('inquirer');
 const connection = require('./server'); //requiring the connection file where in server.js
@@ -56,7 +63,7 @@ function addEmployee(connection) { //function to add an employee passing in the 
     });
 }
 
-function updateEmployeeRole(connection) { //function to update an employee's role passing in the connection
+function updateEmployeeRole(connection) { //function to update an employee's role
   inquirer
     .prompt([
       {
@@ -72,7 +79,7 @@ function updateEmployeeRole(connection) { //function to update an employee's rol
     ])
     .then(answers => {
       connection.query(
-        'UPDATE EMPLOYEES SET role_id = ? WHERE emp_id = ?', 
+        'UPDATE EMPLOYEES SET role_id = ? WHERE emp_id = ?', //update the employee's role id where the employee id is equal to the employee id
         [answers.role_id, answers.employee_id],
         function (err, res) {
           if (err) throw err;
@@ -83,7 +90,7 @@ function updateEmployeeRole(connection) { //function to update an employee's rol
     });
 }
 
-function viewAllRole(connection) { //function to view all roles passing in the connection
+function viewAllRole(connection) { //function to view all roles
   connection.query('SELECT * FROM ROLES', function (err, res) {
     if (err) throw err;
     console.table(res);
@@ -91,7 +98,7 @@ function viewAllRole(connection) { //function to view all roles passing in the c
   });
 }
 
-function addRole(connection) { //function to add a role passing in the connection
+function addRole(connection) { //function to add a role
   inquirer
     .prompt([
       {
@@ -142,7 +149,7 @@ function addDepartment(connection) {
     ])
     .then(answers => {
       connection.query(
-        'INSERT INTO DEPARTMENTS (name) VALUES (?)',
+        'INSERT INTO DEPARTMENTS (dep_name) VALUES (?)',
         [answers.name],
         function (err, res) {
           if (err) throw err;
@@ -218,6 +225,9 @@ function viewEmployeesByDep(connection) {
     });
 }
 
+//on the following function, the deletion process is done in three steps
+//because of the foreign key constraints
+//we can't delete a department if there are employees or roles associated with it
 function deleteDepartment(connection) {
   inquirer
     .prompt([
@@ -229,15 +239,15 @@ function deleteDepartment(connection) {
     ])
     .then(answers => {
       const { dep_id } = answers;
-      const firstDeletion = 'DELETE FROM EMPLOYEES WHERE role_id IN (SELECT role_id FROM ROLES WHERE department_id = ?)';
+      const firstDeletion = 'DELETE FROM EMPLOYEES WHERE role_id IN (SELECT role_id FROM ROLES WHERE department_id = ?)'; //1st deletion
       connection.query(firstDeletion, [dep_id], (err, res) => {
         if (err) throw err;
 
-        const secondDeletion = 'DELETE FROM ROLES WHERE department_id = ?';
+        const secondDeletion = 'DELETE FROM ROLES WHERE department_id = ?';//second deletion
         connection.query(secondDeletion, [dep_id], (err, res) => {
           if (err) throw err;
 
-          const thirdDeletion = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?';
+          const thirdDeletion = 'DELETE FROM DEPARTMENTS WHERE dep_id = ?'; //and finally we can delete the desired department
           connection.query(thirdDeletion, [dep_id], (err, res) => {
             if (err) throw err;
 
@@ -316,7 +326,8 @@ function totalBudget(connection) {
       });
     });
 }
-
+//prompt questions divided in two functions to make the code more readable  and organized
+//one function for the main questions and another one for the more options questions
 function promptUser(connection) { //this is our main prompt questions function
   inquirer
     .prompt([
@@ -408,7 +419,7 @@ function moreOptions(connection) { //this is our more option and if the more opt
         case 'delete roles':
           deleteRole(connection);
           break;
-        case 'delete managers':
+        case 'delete manager':
           deleteManager(connection);
           break;
         case 'total utilized budget of a department':

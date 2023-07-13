@@ -17,11 +17,6 @@ INSERT INTO ROLES (title, salary, department_id) VALUES ('ADMIN', 23000, 3);
 INSERT INTO ROLES (title, salary, department_id) VALUES ('JANITOR', 3000, 4);
 INSERT INTO ROLES (title, salary, department_id) VALUES ('SECURITY', 3000, 2);
 
--- INSERT INTO MANAGERS (first_name, last_name, department_id) VALUES ('BELAYNESH', 'YIMER', 2);
--- INSERT INTO MANAGERS (first_name, last_name, department_id) VALUES ('CHRISTIAN', 'ANDERSON', 1);
--- INSERT INTO MANAGERS (first_name, last_name, department_id) VALUES ('JAMES', 'BOND', 3);
--- INSERT INTO MANAGERS (first_name, last_name, department_id) VALUES ('BRUCE', 'LEE', 4);
-
 INSERT INTO EMPLOYEES (first_name, last_name, manager_id, role_id, department_id) VALUES ('BELAYNESH', 'YIMER', 45, 1, 2);
 INSERT INTO EMPLOYEES (first_name, last_name, manager_id, role_id, department_id) VALUES ('CHRISTIAN', 'ANDERSON', NULL, 2, 1);
 INSERT INTO EMPLOYEES (first_name, last_name, manager_id, role_id, department_id) VALUES ('JAMES', 'BOND', 34, 3, 3);
@@ -36,4 +31,3 @@ INSERT INTO EMPLOYEES (first_name, last_name, manager_id, role_id, department_id
 SELECT * FROM EMPLOYEES;
 SELECT * FROM DEPARTMENTS;
 SELECT * FROM ROLES;
--- SELECT * FROM MANAGERS;

@@ -18,14 +18,6 @@ CREATE TABLE ROLES (
     FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
 );
 
--- CREATE TABLE MANAGERS (
---     mgr_id INT NOT NULL AUTO_INCREMENT,
---     first_name VARCHAR(100) NOT NULL,
---     last_name VARCHAR(100) NOT NULL,
---     department_id INT NOT NULL,
---     PRIMARY KEY (mgr_id),
---     FOREIGN KEY (department_id) REFERENCES DEPARTMENTS(dep_id)
--- );
 
 CREATE TABLE EMPLOYEES (
     emp_id INT NOT NULL AUTO_INCREMENT,
