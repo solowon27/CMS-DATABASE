@@ -298,7 +298,6 @@ function promptUser(connection) {
         name: 'action',
         message: 'What would you like to do?',
         choices: [
-          '\x1b[32m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \x1b[0m',
           'View all Employees',
           'Add Employee',
           'Update Employee Role',
@@ -306,15 +305,8 @@ function promptUser(connection) {
           'Add Role',
           'View all Departments',
           'Add Department',
-          '\x1b[32m ***more options*** \x1b[0m',
-          'update employees manager',
-          'view employees by managers',
-          'view employees by departments',
-          'delete department',
-          'delete roles',
-          'delete manager',
-          'Exit',
-          '\x1b[32m ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \x1b[0m'
+          '\x1b[32m more options \x1b[0m',
+          'Exit'
         ]
       }
     ])
@@ -341,8 +333,38 @@ function promptUser(connection) {
         case 'Add Department':
           addDepartment(connection);
           break;
-
-        //extra options
+        case '\x1b[32m more options \x1b[0m':
+          moreOptions(connection);
+          break;
+        case 'Exit':
+          connection.end();
+          console.log('\x1b[32m Connection closed! \x1b[0m');
+          break;
+        default:
+          break;
+      }
+    });
+}
+function moreOptions(connection) {
+  inquirer
+    .prompt([
+      {
+        type: 'list',
+        name: 'action',
+        message: 'What would you like to do?',
+        choices: [
+          'update employees manager',
+          'view employees by managers',
+          'view employees by departments',
+          'delete department',
+          'delete roles',
+          'delete manager',
+          '\x1b[33m Back \x1b[0m',
+        ]
+      }
+    ])
+    .then(answers => {
+      switch (answers.action) {
         case 'update employees manager':
           updateEmployeesManager(connection);
           break;
@@ -361,16 +383,15 @@ function promptUser(connection) {
         case 'delete managers':
           deleteManager(connection);
           break;
-        case 'Exit':
-          connection.end();
-          console.log('Connection closed.');
+        case '\x1b[33m Back \x1b[0m':
+          promptUser(connection);
+          console.log('\x1b[32m Returned to Home. \x1b[0m'); 
           break;
         default:
           break;
       }
     });
 }
-
 // promptUser();
 module.exports = {
   promptUser
