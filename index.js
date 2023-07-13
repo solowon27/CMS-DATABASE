@@ -1,16 +1,16 @@
 const inquirer = require('inquirer');
-const connection = require('./server');
-const cTable = require('console.table');
+const connection = require('./server'); //requiring the connection file where in server.js
+const cTable = require('console.table'); //requiring the console.table package
 
-function viewAllEmployees(connection) {
-  connection.query('SELECT * FROM EMPLOYEES', function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    promptUser(connection);
+function viewAllEmployees(connection) { //function to view all employees passing in the connection
+  connection.query('SELECT * FROM EMPLOYEES', function (err, res) { //now we pass 3 arguments into our query function
+    if (err) throw err; //and if there is an error we throw it
+    console.table(res); //otherwise we console.table the response
+    promptUser(connection); //by calling the promptUser function and passing in the connection
   });
 }
 
-function addEmployee(connection) {
+function addEmployee(connection) { //function to add an employee passing in the connection
   inquirer
     .prompt([
       {
@@ -39,10 +39,10 @@ function addEmployee(connection) {
         message: "Enter the employee's manager ID:"
       }
     ])
-    .then(answers => {
+    .then(answers => { //we use the .then method to pass in our answers
       connection.query(
-        'INSERT INTO EMPLOYEES (first_name, last_name, role_id, department_id, manager_id) VALUES (?, ?, ?, ?, ?)',
-        [answers.first_name, answers.last_name, answers.role_id, answers.department_id, answers.manager_id || null],
+        'INSERT INTO EMPLOYEES (first_name, last_name, role_id, department_id, manager_id) VALUES (?, ?, ?, ?, ?)', //we use the connection.query method to insert the answers into the database
+        [answers.first_name, answers.last_name, answers.role_id, answers.department_id, answers.manager_id || null], 
         function (err, res) {
           if (err) throw err;
           console.table(res);
@@ -52,7 +52,7 @@ function addEmployee(connection) {
     });
 }
 
-function updateEmployeeRole(connection) {
+function updateEmployeeRole(connection) { //function to update an employee's role passing in the connection
   inquirer
     .prompt([
       {
@@ -68,7 +68,7 @@ function updateEmployeeRole(connection) {
     ])
     .then(answers => {
       connection.query(
-        'UPDATE EMPLOYEES SET role_id = ? WHERE emp_id = ?',
+        'UPDATE EMPLOYEES SET role_id = ? WHERE emp_id = ?', 
         [answers.role_id, answers.employee_id],
         function (err, res) {
           if (err) throw err;
@@ -79,7 +79,7 @@ function updateEmployeeRole(connection) {
     });
 }
 
-function viewAllRole(connection) {
+function viewAllRole(connection) { //function to view all roles passing in the connection
   connection.query('SELECT * FROM ROLES', function (err, res) {
     if (err) throw err;
     console.table(res);
@@ -87,7 +87,7 @@ function viewAllRole(connection) {
   });
 }
 
-function addRole(connection) {
+function addRole(connection) { //function to add a role passing in the connection
   inquirer
     .prompt([
       {
@@ -119,7 +119,7 @@ function addRole(connection) {
     });
 }
 
-function viewAllDepartments(connection) {
+function viewAllDepartments(connection) { //function to view all departments passing in the connection
   connection.query('SELECT * FROM DEPARTMENTS', function (err, res) {
     if (err) throw err;
     console.table(res);
@@ -290,13 +290,33 @@ function deleteManager(connection) {
     });
 }
 
+function totalBudget(connection) {
+  inquirer
+    .prompt([
+      {
+        type: 'input',
+        name: 'dep_id',
+        message: "Enter the department's ID:"
+      }
+    ])
+    .then(answers => {
+      const { dep_id } = answers;
+      const query = 'SELECT SUM(salary) FROM ROLES WHERE department_id = ?';
+      connection.query(query, [dep_id], (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        promptUser(connection);
+      });
+    });
+}
+
 function promptUser(connection) {
   inquirer
     .prompt([
       {
         type: 'list',
         name: 'action',
-        message: 'What would you like to do?',
+        message: 'What would you like to do? \n',
         choices: [
           'View all Employees',
           'Add Employee',
@@ -359,6 +379,7 @@ function moreOptions(connection) {
           'delete department',
           'delete roles',
           'delete manager',
+          'total utilized budget of a department',
           '\x1b[33m Back \x1b[0m',
         ]
       }
@@ -382,6 +403,9 @@ function moreOptions(connection) {
           break;
         case 'delete managers':
           deleteManager(connection);
+          break;
+        case 'total utilized budget of a department':
+          totalBudget(connection);
           break;
         case '\x1b[33m Back \x1b[0m':
           promptUser(connection);
