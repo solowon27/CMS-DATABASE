@@ -15,7 +15,9 @@ npm install
 ## Usage
 To start the application, run the following command:
 
-node server.js
+```node server.js```
+
+
 Once the application is running, you will be presented with a list of options. Use the arrow keys to navigate and press Enter to select an option.
 
 ## Functionality
