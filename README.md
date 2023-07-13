@@ -36,6 +36,7 @@ View employees by department
 Delete a department
 Delete a role
 Delete a manager
+total budget
 Exit the application
 ## License
 This project is licensed under the MIT License.

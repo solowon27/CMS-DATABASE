@@ -1,3 +1,8 @@
+
+//this is our server that everything initiates at the first place
+//so when you want to use this app u need to run the app by typing node server.js on ur terminal
+//first our server.js requiring those dependencies
+
 const mysql = require('mysql2'); //this is mysql2 for our db connection
 require('dotenv').config(); //used for environment variables for secured data
 const index = require('./index'); //this is our index.js file that contains our promptUser function
@@ -6,7 +11,7 @@ const index = require('./index'); //this is our index.js file that contains our 
 const connection = mysql.createConnection({ 
   host: 'localhost',
   user: process.env.DB_USER, //drived from .env file
-  password: process.env.DB_PASS,
+  password: process.env.DB_PASS, //these are our user and password with database name params from our.env file
   database: process.env.DB_NAME
 });
 

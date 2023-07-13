@@ -1,3 +1,7 @@
+//this is our index file where the user prompts functions are loaded
+///it is a long line page code so i put some comments on basic lines so to save time u can check the comments
+
+
 const inquirer = require('inquirer');
 const connection = require('./server'); //requiring the connection file where in server.js
 const cTable = require('console.table'); //requiring the console.table package
@@ -246,10 +250,6 @@ function deleteDepartment(connection) {
 }
 
 
-
-
-
-
 function deleteRole(connection) {
   inquirer
     .prompt([
@@ -261,14 +261,21 @@ function deleteRole(connection) {
     ])
     .then(answers => {
       const { role_id } = answers;
-      const query = 'DELETE FROM ROLES WHERE role_id = ?';
-      connection.query(query, [role_id], (err, res) => {
+      const deleteEmployees = 'DELETE FROM EMPLOYEES WHERE role_id = ?';
+      connection.query(deleteEmployees, [role_id], (err, employeeRes) => {
         if (err) throw err;
-        console.table(res);
-        promptUser(connection);
+
+        const deleteRoleQuery = 'DELETE FROM ROLES WHERE role_id = ?';
+        connection.query(deleteRoleQuery, [role_id], (err, roleRes) => {
+          if (err) throw err;
+
+          console.log('Role and associated employees deleted successfully.');
+          promptUser(connection);
+        });
       });
     });
 }
+
 
 function deleteManager(connection) {
   inquirer
@@ -310,7 +317,7 @@ function totalBudget(connection) {
     });
 }
 
-function promptUser(connection) {
+function promptUser(connection) { //this is our main prompt questions function
   inquirer
     .prompt([
       {
@@ -365,7 +372,7 @@ function promptUser(connection) {
       }
     });
 }
-function moreOptions(connection) {
+function moreOptions(connection) { //this is our more option and if the more option is not triggered the contents are not shown up
   inquirer
     .prompt([
       {
@@ -417,6 +424,6 @@ function moreOptions(connection) {
     });
 }
 // promptUser();
-module.exports = {
+module.exports = { //finally here we export our promptuser to be used in server js
   promptUser
 };
