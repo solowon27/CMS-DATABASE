@@ -35,6 +35,9 @@ To start the application, run the following command:
 
 Once the application is running, you will be presented with a list of options. Use the arrow keys to navigate and press Enter to select an option.
 
+``` video demo link ```
+https://drive.google.com/file/d/1ffb3ZBwY45Xlh0pue_CBgi5dD0_W0cfu/view
+
 ## Functionality
 The application provides the following functionality:
 
