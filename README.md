@@ -1,6 +1,21 @@
 ## Employee Management System
 This is a command-line application that allows you to manage employees, roles, and departments in a database. It provides various functionalities such as viewing employees, adding employees, updating employee roles, viewing roles, adding roles, viewing departments, adding departments, and more.
 
+# file structure
+```
+├── db                 // this is our database folder
+    ├── schema.sql     // database and tables are created here
+    ├── seeds.sql       // table values inserted here
+├──node_modules
+├── .env                //enviroment variables for secured user and passwords
+├── .gitignore          // files and folders to be ignored by git
+├── index.js            // functions and user prompt questions loaded here
+|__ LICENSE             // MIT license
+├── package.json        // npm package file
+├── package-lock.json   // npm package file
+└── README.md           // the read me file  
+└──  server.js         // where everything is initiated and sql connection established  
+```
 ## Prerequisites
 Before running this application, make sure you have the following installed:
 
@@ -37,7 +52,7 @@ Delete a department
 Delete a role
 Delete a manager
 total budget
-Exit the application
+Exit and Back the application
 ## License
 This project is licensed under the MIT License.
 
