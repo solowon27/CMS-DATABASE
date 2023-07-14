@@ -41,7 +41,8 @@ https://drive.google.com/file/d/1ffb3ZBwY45Xlh0pue_CBgi5dD0_W0cfu/view
 ## Functionality
 The application provides the following functionality:
 
-```View all employees
+```
+View all employees
 Add an employee
 Update an employee's role
 View all roles
@@ -55,7 +56,10 @@ Delete a department
 Delete a role
 Delete a manager
 total budget
-Exit and Back the application```
+Exit and Back the application 
+```
+
+
 ## License
 This project is licensed under the MIT License.
 
